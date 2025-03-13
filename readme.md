@@ -15,6 +15,9 @@ This project is a simple movie database application that allows users to manage 
 - **Sort Movies by Year**: List movies sorted by their release year.
 - **Filter Movies**: Filter movies based on rating and year range.
 
+<img width="702" alt="Screenshot" src="https://github.com/user-attachments/assets/e5920f87-e799-43db-a284-9a701671e70e" />
+
+
 ## Installation
 
 1. Clone the repository:
