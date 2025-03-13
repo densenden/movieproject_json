@@ -176,7 +176,7 @@
         "year": 1964
     },
     "Skyfall": {
-        "rating": 7.8,
+        "rating": 9.2,
         "year": 2012
     },
     "Dr. No": {
@@ -198,9 +198,5 @@
     "Oppenheimer": {
         "rating": 8.8,
         "year": 2023
-    },
-    "The Flintstones": {
-        "rating": 4.6,
-        "year": 1994
     }
 }

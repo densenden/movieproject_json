@@ -3,28 +3,26 @@ import movie_storage
 import json
 
 def list_movies():
-    with open("data.json", "r") as movie_database:
-        movie_database = json.load(movie_database)
-        print(f"{len(movie_database)} movies in total")
-        for title, info in movie_database.items():
-            print(f"{title} ({info['year']}): {info['rating']}")
+    movies = movie_storage.list_movies()
+    print(f"{len(movies)} movies in total")
+    for title, info in movies.items():
+        print(f"{title} ({info['year']}): {info['rating']}")
 
 def stats():
     ratings = []
-    with open("data.json", "r") as movie_database:
-        movie_database = json.load(movie_database)
-        for title, info in movie_database.items():
-            ratings.append(info["rating"])
+    movies = movie_storage.list_movies()
+    for title, info in movies.items():
+        ratings.append(info["rating"])
 
-    avg_rating = round(sum(ratings) / len(movie_database), 1)
-    print(f"Average Rating of {len(movie_database)} Movies: {avg_rating}")
+    avg_rating = round(sum(ratings) / len(movies), 1)
+    print(f"Average Rating of {len(movies)} Movies: {avg_rating}")
 
     best_rating = max(ratings)
     worst_rating = min(ratings)
 
-    best_movies = [title for title, info in movie_database.items() if info["rating"] == best_rating]
-    worst_movies = [title for title, info in movie_database.items() if info["rating"] == worst_rating]
-    average_movies = [title for title, info in movie_database.items() if info["rating"] == avg_rating]
+    best_movies = [title for title, info in movies.items() if info["rating"] == best_rating]
+    worst_movies = [title for title, info in movies.items() if info["rating"] == worst_rating]
+    average_movies = [title for title, info in movies.items() if info["rating"] == avg_rating]
 
     for title in average_movies:
         print(f"Average Movie: {title}")
@@ -36,22 +34,19 @@ def stats():
         print(f"Worst Movie: {title} ({worst_rating})")
 
 def random_movie():
-    with open("data.json", "r") as movie_database:
-        movie_database = json.load(movie_database)
-        all_titles = list(movie_database.keys())
-        title = random.choice(all_titles)
-        print(f"A Random Movie: {title} (Rating: {movie_database[title]['rating']})")
+    movies = movie_storage.list_movies()
+    all_titles = list(movies.keys())
+    title = random.choice(all_titles)
+    print(f"A Random Movie: {title} (Rating: {movies[title]['rating']})")
 
 def search_movie():
     try:
-        with open("data.json", "r") as movie_file:
-            movie_database = json.load(movie_file)
-
+        movies = movie_storage.list_movies()
         query = input("Enter part of a movie name: ").lower()
 
         found_movies = [
             f"{movie_name} ({data['year']}): {data['rating']}"
-            for movie_name, data in movie_database.items()
+            for movie_name, data in movies.items()
             if query in movie_name.lower()
         ]
 
@@ -67,10 +62,8 @@ def search_movie():
 
 def movies_sorted_by_rating():
     try:
-        with open("data.json", "r") as movie_file:
-            movie_database = json.load(movie_file)
-
-        sorted_movies = sorted(movie_database.items(), key=lambda item: item[1]["rating"], reverse=True)
+        movies = movie_storage.list_movies()
+        sorted_movies = sorted(movies.items(), key=lambda item: item[1]["rating"], reverse=True)
 
         print("Movies sorted by rating:")
         for title, info in sorted_movies:
@@ -82,10 +75,8 @@ def movies_sorted_by_rating():
 
 def movies_sorted_by_year():
     try:
-        with open("data.json", "r") as movie_file:
-            movie_database = json.load(movie_file)
-
-        sorted_movies_year = sorted(movie_database.items(), key=lambda item: item[1]["year"], reverse=True)
+        movies = movie_storage.list_movies()
+        sorted_movies_year = sorted(movies.items(), key=lambda item: item[1]["year"], reverse=True)
 
         print("Movies sorted by year:")
         for title, info in sorted_movies_year:
@@ -146,6 +137,31 @@ def add_movie():
 
 def delete_movie():
     title = input("Enter movie name to delete: ").strip()
+    movies = movie_storage.list_movies()
+
+    # Search for movies that match the input
+    matching_movies = [movie for movie in movies if title.lower() in movie.lower()]
+
+    if not matching_movies:
+        print("Error: Movie not found.")
+        return
+
+    if len(matching_movies) == 1:
+        confirm = input(f"Did you mean '{matching_movies[0]}'? (yes/no): ").strip().lower()
+        if confirm != 'yes':
+            print("Operation cancelled.")
+            return
+        title = matching_movies[0]
+    else:
+        print("Multiple movies found:")
+        for i, movie in enumerate(matching_movies, 1):
+            print(f"{i}. {movie}")
+        choice = input("Enter the number of the movie to delete: ").strip()
+        if not choice.isdigit() or not (1 <= int(choice) <= len(matching_movies)):
+            print("Invalid choice. Operation cancelled.")
+            return
+        title = matching_movies[int(choice) - 1]
+
     if movie_storage.delete_movie(title):
         print(f"Movie '{title}' was successfully deleted.")
     else:
