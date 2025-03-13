@@ -11,6 +11,7 @@ def list_movies():
     for title, info in movies.items():
         print(f"{title} ({info['year']}): {info['rating']}")
 
+
 def stats():
     """
     Print statistics about the movies in the database.
@@ -39,13 +40,21 @@ def stats():
     for title in worst_movies:
         print(f"Worst Movie: {title} ({worst_rating})")
 
+
 def random_movie():
+    """
+    Return a random movie from the database.
+    """
     movies = movie_storage.storage_list_movies()
     all_titles = list(movies.keys())
     title = random.choice(all_titles)
     print(f"A Random Movie: {title} (Rating: {movies[title]['rating']})")
 
+
 def search_movie():
+    """
+    Search for a movie in the database. Select from a list of matching movies.
+    """
     try:
         movies = movie_storage.storage_list_movies()
         query = input("Enter part of a movie name: ").lower()
@@ -66,7 +75,12 @@ def search_movie():
     except json.JSONDecodeError:
         print("Error: The database file is not valid JSON.")
 
+
 def movies_sorted_by_rating():
+    """
+    List all movies in the database sorted by rating.
+
+    """
     try:
         movies = movie_storage.storage_list_movies()
         sorted_movies = sorted(movies.items(), key=lambda item: item[1]["rating"], reverse=True)
@@ -79,7 +93,11 @@ def movies_sorted_by_rating():
     except json.JSONDecodeError:
         print("Error: The database file is not valid JSON.")
 
+
 def movies_sorted_by_year():
+    """
+    List all movies in the database sorted by year.
+    """
     try:
         movies = movie_storage.storage_list_movies()
         sorted_movies_year = sorted(movies.items(), key=lambda item: item[1]["year"], reverse=True)
@@ -92,7 +110,11 @@ def movies_sorted_by_year():
     except json.JSONDecodeError:
         print("Error: The database file is not valid JSON.")
 
+
 def filter_movies():
+    """
+    Filter movies by rating and year range.
+    """
     min_rating = input("Enter the minimum rating (1-10): ").strip()
     start_year = input("Enter the start year: ").strip()
     end_year = input("Enter the end year: ").strip()
@@ -118,7 +140,11 @@ def filter_movies():
     else:
         print("No movies found matching your criteria.")
 
+
 def add_movie():
+    """
+    Enter a new movie into the database.
+    """
     title = input("Enter movie name: ").strip()
     rating = input("Enter movie rating (1-10): ").strip()
     year = input("Enter year of release: ").strip()
@@ -141,7 +167,11 @@ def add_movie():
     movie_storage.storage_add_movie(title, rating, year)
     print(f"Movie '{title}' successfully added to the database!")
 
+
 def delete_movie():
+    """"
+    Delete a movie from the database.
+    """
     title = input("Enter movie name to delete: ").strip()
     movies = movie_storage.storage_list_movies()
 
@@ -173,7 +203,11 @@ def delete_movie():
     else:
         print("Error: Movie not found.")
 
+
 def update_movie():
+    """
+    Update the rating of a movie in the database.
+    """
     title = input("Enter movie name to update: ").strip()
     new_rating = input("Enter new rating (1-10): ").strip()
 
@@ -195,6 +229,7 @@ def update_movie():
         print(f"Movie '{title}' updated successfully with a new rating: {new_rating}")
     else:
         print("Error: Movie not found.")
+
 
 menu_options = {
     0: exit,
