@@ -3,14 +3,20 @@ import movie_storage
 import json
 
 def list_movies():
-    movies = movie_storage.list_movies()
+    """
+    List all movies in the database.
+    """
+    movies = movie_storage.storage_list_movies()
     print(f"{len(movies)} movies in total")
     for title, info in movies.items():
         print(f"{title} ({info['year']}): {info['rating']}")
 
 def stats():
+    """
+    Print statistics about the movies in the database.
+    """
     ratings = []
-    movies = movie_storage.list_movies()
+    movies = movie_storage.storage_list_movies()
     for title, info in movies.items():
         ratings.append(info["rating"])
 
@@ -34,14 +40,14 @@ def stats():
         print(f"Worst Movie: {title} ({worst_rating})")
 
 def random_movie():
-    movies = movie_storage.list_movies()
+    movies = movie_storage.storage_list_movies()
     all_titles = list(movies.keys())
     title = random.choice(all_titles)
     print(f"A Random Movie: {title} (Rating: {movies[title]['rating']})")
 
 def search_movie():
     try:
-        movies = movie_storage.list_movies()
+        movies = movie_storage.storage_list_movies()
         query = input("Enter part of a movie name: ").lower()
 
         found_movies = [
@@ -62,7 +68,7 @@ def search_movie():
 
 def movies_sorted_by_rating():
     try:
-        movies = movie_storage.list_movies()
+        movies = movie_storage.storage_list_movies()
         sorted_movies = sorted(movies.items(), key=lambda item: item[1]["rating"], reverse=True)
 
         print("Movies sorted by rating:")
@@ -75,7 +81,7 @@ def movies_sorted_by_rating():
 
 def movies_sorted_by_year():
     try:
-        movies = movie_storage.list_movies()
+        movies = movie_storage.storage_list_movies()
         sorted_movies_year = sorted(movies.items(), key=lambda item: item[1]["year"], reverse=True)
 
         print("Movies sorted by year:")
@@ -103,7 +109,7 @@ def filter_movies():
         print("Error: Invalid input. Rating must be a number (1-10), and years must be integers.")
         return
 
-    filtered_movies = movie_storage.filter_movies(min_rating, start_year, end_year)
+    filtered_movies = movie_storage.storage_filter_movies(min_rating, start_year, end_year)
 
     if filtered_movies:
         print(f"\nMovies matching your criteria ({len(filtered_movies)} found):")
@@ -132,12 +138,12 @@ def add_movie():
         print("Error: Rating must be between 1 and 10.")
         return
 
-    movie_storage.add_movie(title, rating, year)
+    movie_storage.storage_add_movie(title, rating, year)
     print(f"Movie '{title}' successfully added to the database!")
 
 def delete_movie():
     title = input("Enter movie name to delete: ").strip()
-    movies = movie_storage.list_movies()
+    movies = movie_storage.storage_list_movies()
 
     # Search for movies that match the input
     matching_movies = [movie for movie in movies if title.lower() in movie.lower()]
@@ -162,7 +168,7 @@ def delete_movie():
             return
         title = matching_movies[int(choice) - 1]
 
-    if movie_storage.delete_movie(title):
+    if movie_storage.storage_delete_movie(title):
         print(f"Movie '{title}' was successfully deleted.")
     else:
         print("Error: Movie not found.")
@@ -185,7 +191,7 @@ def update_movie():
         print("Error: Rating must be between 1 and 10.")
         return
 
-    if movie_storage.update_movie(title, new_rating):
+    if movie_storage.storage_update_movie(title, new_rating):
         print(f"Movie '{title}' updated successfully with a new rating: {new_rating}")
     else:
         print("Error: Movie not found.")

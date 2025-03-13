@@ -198,5 +198,9 @@
     "Oppenheimer": {
         "rating": 8.8,
         "year": 2023
+    },
+    "Modern Times": {
+        "rating": 5.5,
+        "year": 1936
     }
 }
